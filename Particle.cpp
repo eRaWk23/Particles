@@ -68,7 +68,7 @@ void Particle::update(float dt)
 
 void Particle::translate(double xShift,double yShift)
 {
-    TranslationMatrix T(xShift,yShift);
+    TranslationMatrix T(double xShift, double yShift, int nCols);
 
     m_A = T + m_A;
     m_centerCoordinate.x += xShift;
