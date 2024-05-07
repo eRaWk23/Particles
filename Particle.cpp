@@ -2,10 +2,11 @@
 
 
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPostion)
+
+   : m_A(2, numPoints),
+    m_ttl(TTL),
+    m_numPoints(numPoints)
 {
-    m_A(2, numPoints);
-    m_ttl = TTL;
-    m_numPoints = numPoints;
     //m_radiansPerSec = ;
     //m_cartesianPlane = ;
 }
