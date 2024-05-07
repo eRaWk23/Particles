@@ -7,8 +7,92 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosti
     m_ttl(TTL),
     m_numPoints(numPoints)
 {
-    //m_radiansPerSec = ;
-    //m_cartesianPlane = ;
+    m_radiansPerSec = ((float)rand() / RAND_MAX) * M_PI;
+
+    m_cartesianPlane.setCenter(0,0);
+    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
+
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPostion, m_cartesianPlane);
+
+    if(rand() % 2 == 1)
+    {
+        m_vx = rand() % 401 + 100;
+    }
+    else
+    {
+        m_vx = -1 * rand() % 401 + 100;
+    }
+    
+    if(rand() % 2 == 1)
+    {
+        m_vy = rand() % 401 + 100;
+    }
+    else
+    {
+        m_vy = -1 * rand() % 401 + 100;
+    }
+
+    m_color1 = Color::White;
+    m_color2 = Color(rand() % 256);
+
+    double theta = rand() / RAND_MAX * (M_PI / 2.0);
+    double dTheta = 2 * M_PI /(numPoints - 1);
+
+    for (int j = 0; j < numPoints; j++)
+    {
+        double r, dx, dy;
+        r = rand() % 21 + 60;
+        dx = r * cos(theta);
+        dy = r * sin(theta);
+
+        m_A(0,j) = m_centerCoordinate.x + dx;
+        m_A(1,j) = m_centerCoordinate.y + dy;
+
+        theta += dTheta;
+    }
+
+}
+
+void Particle::update(float dt)
+{
+    dt - m_ttl;
+    rotate(dt * m_radiansPerSec);
+    scale(SCALE);
+
+    float dx, dy;
+    dx = dt* m_vx;
+    m_vy - (G * dt);
+    dy = m_vy * dt;
+    translate(dx, dy);
+}
+
+void Particle::translate(double xShift,double yShift)
+{
+    TranslationMatrix T(xShift,yShift);
+
+    m_A = T + m_A;
+    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.y += yShift;
+}
+
+void Particle::rotate(double theta)
+{
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
+
+    RotationMatrix R(theta);
+    m_A = R* m_A;
+
+    translate(temp.x, temp.y);
+}
+
+void Particle::scale(double c)
+{
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
+    ScalingMatrix S(c);
+    m_A = S * m_A;
+    translate(temp.x, temp.y);
 }
 
 bool Particle::almostEqual(double a, double b, double eps)
