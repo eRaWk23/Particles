@@ -15,7 +15,15 @@ namespace Matrices
             ///Construct a matrix of the specified size.
             ///Initialize each element to 0.
             Matrix(int _rows, int _cols)
-            {}
+            {
+                for (int i = 0; i <_rows; i++)
+                {
+                    for (int j = 0; j < _cols; j++)
+                    {
+                        
+                    }
+                }
+            }
 
             ///************************************
             ///inline accessors / mutators, these are done:

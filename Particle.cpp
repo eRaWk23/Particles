@@ -55,7 +55,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosti
 
 void Particle::update(float dt)
 {
-    dt - m_ttl;
+    dt -= m_ttl;
     rotate(dt * m_radiansPerSec);
     scale(SCALE);
 
