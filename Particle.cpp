@@ -41,7 +41,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosti
     for (int j = 0; j < numPoints; j++)
     {
         double r, dx, dy;
-        r = rand() % 21 + 60;
+        r = rand() % 61 + 20;
         dx = r * cos(theta);
         dy = r * sin(theta);
 
@@ -51,6 +51,24 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosti
         theta += dTheta;
     }
 
+}
+
+void Particle::draw(RenderTarget& target, RenderStates states) const
+{
+    VertexArray lines(TriangleFan, m_numPoints + 1);
+
+    Vector2f center = (Vector2f)target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane);
+
+    lines[0].position = center;
+    lines[0].color = m_color1;
+
+    for(int j = 1; j < m_numPoints; j++)
+    {
+        lines[j].position = (Vector2f)target.mapCoordsToPixel(Vector2f(m_A(0,j-1),m_A(1, j-1)), m_cartesianPlane);
+        lines[j].color = m_color2;
+    }
+
+    target.draw(lines);
 }
 
 void Particle::update(float dt)
@@ -97,7 +115,7 @@ void Particle::scale(double c)
 
 bool Particle::almostEqual(double a, double b, double eps)
 {
-	return fabs(a - b) < eps;
+    return fabs(a - b) < eps;
 }
 
 void Particle::unitTests()
