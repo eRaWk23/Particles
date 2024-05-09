@@ -57,11 +57,12 @@ namespace Matrices
     ///usage:  c = a + b;
     Matrix operator+(const Matrix& a, const Matrix& b)
     {
+        Matrix results(a.getRows(), b.getCols());
         for (int i = 0; i < a.getRows(); i++)
         {
             for (int j = 0; j < b.getCols(); j++)
             {
-                a.at(i).at(j) += b.at(i).at(j);
+               results(i,j) = a(i,j) + b(i,j);
             }
         }
     }
@@ -70,11 +71,12 @@ namespace Matrices
     ///usage:  c = a * b;
     Matrix operator*(const Matrix& a, const Matrix& b)
     {
+        Matrix results(a.getRows(), b.getCols());
         for (int i = 0; i < a.getRows(); i++)
         {
             for (int j = 0; j < b.getRows(); j++)
             {
-                a.at(i).at(j) *= b.at(i).at(j);
+                results(i,j) = a(i,j) * b(i,j);
             }
         }
     }
@@ -102,11 +104,11 @@ namespace Matrices
     bool operator!=(const Matrix& a, const Matrix& b)
     {
         bool not_equal = true;
-        for (int i = 0; i < a.rows; i++)
+        for (int i = 0; i < a.getRows(); i++)
         {
-            for (int j = 0; j < b.cols; j++)
+            for (int j = 0; j < b.getCols(); j++)
             {
-                if(a.at(i).at(j) == b.at(i).at(j))
+                if(a(i,j) == b(i,j))
                 {
                     not_equal = false;
                 }
