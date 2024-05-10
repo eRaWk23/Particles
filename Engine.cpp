@@ -4,8 +4,8 @@ using namespace std;
 
 Engine::Engine()
 {
-    RenderWindow m_Window;
-    VideoMode::getDesktopMode();
+    VideoMode customMode(1440, 1080);
+    m_Window.create(customMode, "Particle");
 }
 
 void Engine::run()
@@ -18,10 +18,9 @@ void Engine::run()
 
     while(m_Window.isOpen())
     {
-        Time newTime = clock.restart();
-        float dtAtSeconds = newTime.asSeconds();
+        Time t = clock.restart();
         input();
-        update(dtAtSeconds);
+        update(t.asSeconds());
         draw();
     }
 }

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MATRIX_H_INCLUDED
 #define MATRIX_H_INCLUDED
 
@@ -14,16 +15,7 @@ namespace Matrices
         public:
             ///Construct a matrix of the specified size.
             ///Initialize each element to 0.
-            Matrix(int _rows, int _cols)
-            {
-                for (int i = 0; i <_rows; i++)
-                {
-                    for (int j = 0; j < _cols; j++)
-                    {
-                        a.at(i).at(j) = 0;
-                    }
-                }
-            }
+            Matrix(int _rows, int _cols);
 
             ///************************************
             ///inline accessors / mutators, these are done:
@@ -55,82 +47,23 @@ namespace Matrices
 
     ///Add each corresponding element.
     ///usage:  c = a + b;
-    Matrix operator+(const Matrix& a, const Matrix& b)
-    {
-        Matrix results(a.getRows(), b.getCols());
-        for (int i = 0; i < a.getRows(); i++)
-        {
-            for (int j = 0; j < b.getCols(); j++)
-            {
-               results(i,j) = a(i,j) + b(i,j);
-            }
-        }
-    }
+    Matrix operator+(const Matrix& a, const Matrix& b);
 
     ///Matrix multiply.  See description.
     ///usage:  c = a * b;
-    Matrix operator*(const Matrix& a, const Matrix& b)
-    {
-        Matrix results(a.getRows(), b.getCols());
-        for (int i = 0; i < a.getRows(); i++)
-        {
-            for (int j = 0; j < b.getRows(); j++)
-            {
-                results(i,j) = a(i,j) * b(i,j);
-            }
-        }
-    }
+    Matrix operator*(const Matrix& a, const Matrix& b);
 
     ///Matrix comparison.  See description.
     ///usage:  a == b
-    bool operator==(const Matrix& a, const Matrix& b)
-    {
-        bool equals = true;
-        for (int i = 0; i < a.getRows(); i++)
-        {
-            for (int j = 0; j < b.getCols(); j++)
-            {
-                if(a(i, j) == b(i, j))
-                {
-                    equals = false;
-                }
-            }
-        }
-        return equals;
-    }
+    bool operator==(const Matrix& a, const Matrix& b);
 
     ///Matrix comparison.  See description.
     ///usage:  a != b
-    bool operator!=(const Matrix& a, const Matrix& b)
-    {
-        bool not_equal = true;
-        for (int i = 0; i < a.getRows(); i++)
-        {
-            for (int j = 0; j < b.getCols(); j++)
-            {
-                if(a(i,j) == b(i,j))
-                {
-                    not_equal = false;
-                }
-            }
-        }
-        return not_equal;
-    }
+    bool operator!=(const Matrix& a, const Matrix& b);
 
     ///Output matrix.
     ///Separate columns by ' ' and rows by '\n'
-    ostream& operator<<(ostream& os, const Matrix& a)
-    {
-        for(int i = 0; i < a.getRows(); i++)
-        {
-            for(int j = 0; j < a.getRows(); j++)
-            {
-                os << a(i, j) << ' ';
-            }
-            os << "\n";
-        }
-        return os;
-    }
+    ostream& operator<<(ostream& os, const Matrix& a);
 
     /*******************************************************************************/
 
@@ -146,13 +79,7 @@ namespace Matrices
             sin(theta)   cos(theta)
             */
             ///theta represents the angle of rotation in radians, counter-clockwise
-            RotationMatrix(double theta) : Matrix(2, 2)
-            {
-                a.at(0).at(0) = cos(theta);
-                a.at(0).at(1) = -sin(theta);
-                a.at(1).at(0) = sin(theta);
-                a.at(1).at(1) = cos(theta);
-            }
+            RotationMatrix(double theta);
     };
 
     ///2D scaling matrix
@@ -167,13 +94,7 @@ namespace Matrices
             0       scale
             */
             ///scale represents the size multiplier
-            ScalingMatrix(double scale) : Matrix(2, 2)
-            {
-                a.at(0).at(0) = scale;
-                a.at(0).at(1) = 0;
-                a.at(1).at(0) = scale;
-                a.at(1).at(1) = 0;
-            }
+            ScalingMatrix(double scale);
     };
 
     ///2D Translation matrix
@@ -190,14 +111,7 @@ namespace Matrices
             ///paramaters are xShift, yShift, and nCols
             ///nCols represents the number of columns in the matrix
             ///where each column contains one (x,y) coordinate pair
-            TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2, nCols)
-            {
-                for (int i = 0; i < nCols; i++)
-                {
-                    a[0][i] = xShift;
-                    a[1][i] = yShift;
-                }
-            }
+            TranslationMatrix(double xShift, double yShift, int nCols);
     };
 }
 
