@@ -9,12 +9,12 @@ using namespace std;
 
 Engine::Engine()
 {
-    m_Window.create(VideoMode::getDesktopMode(), "Particles", Style::Default);
+    m_Window.create(sf::VideoMode(1440, 1080), "Particles");
 }
 
 void Engine::run()
 {
-    Clock clock;
+    Clock c;
     cout << "Starting Particle unit test....." << endl;
     Particle p(m_Window, 4, { (int)m_Window.getSize().x/2, (int)m_Window.getSize().y/2});
     p.unitTests();
@@ -22,7 +22,7 @@ void Engine::run()
 
     while(m_Window.isOpen())
     {
-        Time t = clock.restart();
+        Time t = c.restart();
         input();
         update(t.asSeconds());
         draw();
@@ -37,49 +37,52 @@ void Engine::input()
         if(event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         {
             m_Window.close();
-
-            std::vector<Particle> newPart;
         }
+
+        std::vector<Particle> newParticle;
+        
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button ==  Mouse::Left)
         {
-            //Vector2f mouseClickPosition(event.mouseButton.x, event.mouseButton.y);
+            sf::Vector2 mousePosition = sf::Mouse::getPosition(m_Window);
 
             for (int i = 0; i < 5; i++)
             {
                 int num = rand() % 26 + 25;
-                Particle particles(m_Window, num, { event.mouseButton.x, event.mouseButton.y});
-                m_particles.push_back(particles);
+                newParticle.push_back(Particle(m_Window, num, mousePosition));
             }
         }
+        m_particles.insert(m_particles.begin(), newParticle.begin(), newParticle.end());
     }
 }
 
 void Engine::update(float dtAsSeconds)
 {
+    std::vector<Particle>::iterator it;
     
+    for(it = m_particles.begin(); it != m_particles.end();)
     {
-        for(auto iter = m_particles.begin(); iter != m_particles.end();)
+        if(it->getTTL() > 0.0)
         {
-            if(iter->getTTL() > 0.0)
-            {
-                update(dtAsSeconds);
-                iter++;
-            }
-            else
-            {
-                iter = m_particles.erase(iter);
-            }
+            it->update(dtAsSeconds);
+            it++;
         }
-    }
+        else
+        {
+            it = m_particles.erase(it);
+        }
+        }
+    
 }
 
 void Engine::draw()
 {
     m_Window.clear();
 
-    for (const auto &part: m_particles)
+    std::vector<Particle>::iterator it;
+
+    for (it = m_particles.begin(); it != m_particles.end(); it++)
     {
-        m_Window.draw(part);
+        m_Window.draw(*it);
     }
 
     m_Window.display();
