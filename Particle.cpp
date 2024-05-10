@@ -41,7 +41,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosti
         r = rand() % 61 + 20;
         dx = r * cos(theta);
         dy = r * sin(theta);
-
+        
         m_A(0,i) = m_centerCoordinate.x + dx;
         m_A(1,i) = m_centerCoordinate.y + dy;
 
@@ -97,7 +97,7 @@ void Particle::translate(double xShift,double yShift)
 void Particle::rotate(double theta)
 {
     Vector2f temp = m_centerCoordinate;
-    translate(-temp.x, -temp.y);
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
 
     RotationMatrix R(theta);
     m_A = R* m_A;
