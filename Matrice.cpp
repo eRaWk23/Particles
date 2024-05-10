@@ -3,7 +3,7 @@
 
 namespace Matrices
 {
-    Matrix::Matrix(int _rows, int _cols)
+    Matrix::Matrix(int _rows, int _cols) : rows(_rows) , cols(_cols)
     {
         a.resize(_rows);
         for (int i = 0; i <_rows; i++)
@@ -18,6 +18,10 @@ namespace Matrices
 
     Matrix operator+(const Matrix& a, const Matrix& b)
     {
+        if (a.getRows() != b.getRows() || a.getCols() != b.getCols())
+        {
+            throw runtime_error("Error rows or cols must match.");
+        }
         Matrix results(a.getRows(), b.getCols());
         for (int i = 0; i < a.getRows(); i++)
         {
@@ -31,6 +35,11 @@ namespace Matrices
 
     Matrix operator*(const Matrix& a, const Matrix& b)
     {
+        if (a.getCols() != b.getRows())
+        {
+            throw runtime_error("Rows and cols must match.");
+        }
+
         Matrix results(a.getRows(), b.getCols());
         for (int j = 0; j < b.getCols(); j++)
         {
@@ -49,6 +58,10 @@ namespace Matrices
 
     bool operator==(const Matrix& a, const Matrix& b)
     {
+        if(a.getRows() != b.getRows() || a.getCols() != b.getCols())
+        {
+            return false;
+        }
         for (int i = 0; i < a.getRows(); i++)
         {
             for (int j = 0; j < b.getCols(); j++)
@@ -82,10 +95,13 @@ namespace Matrices
 
     RotationMatrix::RotationMatrix(double theta) : Matrix(2, 2)
             {
-                (*this)(0,0) = cos(theta);
-                (*this)(0,1) = -sin(theta);
-                (*this)(1,0) = sin(theta);
-                (*this)(1,1) = cos(theta);
+                double cosTheta = cos(theta);
+                double sinTheta = sin(theta);
+
+                (*this)(0,0) = cosTheta;
+                (*this)(0,1) = -sinTheta;
+                (*this)(1,0) = sinTheta;
+                (*this)(1,1) = cosTheta;
             }
 
     ScalingMatrix::ScalingMatrix(double scale) : Matrix(2, 2)

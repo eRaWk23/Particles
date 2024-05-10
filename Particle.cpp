@@ -1,6 +1,10 @@
 #include "Particle.h"
-#include "Matrices.h"
-
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <random>
 
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPostion) : m_A(2, numPoints)
 {
@@ -8,43 +12,43 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosti
     m_numPoints = numPoints;
 
     m_radiansPerSec = ((float)rand() / RAND_MAX) * M_PI;
-    m_cartesianPlane.setCenter(0,0);
+    m_cartesianPlane.setCenter(0, 0);
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
 
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPostion, m_cartesianPlane);
 
-    if(rand() % 2 == 1)
+    
+    m_vx = rand() % 401 + 100;
+
+    int posOrNeg = rand() % 2;
+    if(posOrNeg != 0)
     {
-        m_vx = rand() % 401 + 100;
-    }
-    else
-    {
-        m_vx = -1 * rand() % 401 + 100;
-    }
+        m_vx *= (-1);
+    }    
     
     m_vy = rand() % 401 + 100;
     
 
-    m_color1.r = 225;
-    m_color1.g = 225;
-    m_color1.b = 225;
+    m_color1.r = 255;
+    m_color1.g = 255;
+    m_color1.b = 255;
 
-    m_color2.r = 255;
-    m_color2.g = 125;
+    m_color2.r = 0;
+    m_color2.g = 128;
     m_color2.b = 0; 
 
-    double theta = rand() / RAND_MAX * (M_PI / 2.0);
-    double dTheta = 2 * M_PI /(numPoints - 1);
+    float theta = ((float)rand() / (RAND_MAX)) * (M_PI / 2);
+    float dTheta = 2 * M_PI /(numPoints - 1);
 
-    for (int j = 0; j < numPoints; j++)
+    for (int i = 0; i < numPoints; i++)
     {
-        double r, dx, dy;
+        float r, dx, dy;
         r = rand() % 61 + 20;
         dx = r * cos(theta);
         dy = r * sin(theta);
 
-        m_A(0,j) = m_centerCoordinate.x + dx;
-        m_A(1,j) = m_centerCoordinate.y + dy;
+        m_A(0,i) = m_centerCoordinate.x + dx;
+        m_A(1,i) = m_centerCoordinate.y + dy;
 
         theta += dTheta;
     }
@@ -61,13 +65,13 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
     lines[0].position = center;
     lines[0].color = m_color1;
 
-    for(int j = 1; j < m_numPoints; j++)
+    for(int i = 1; i < m_numPoints; i++)
     {
-        sf::Vector2f coords(m_A(0, j -1), m_A(1, j-1));
+        sf::Vector2f coords(m_A(0, i -1), m_A(1, i-1));
         sf::Vector2i pixelCoords = target.mapCoordsToPixel(coords, m_cartesianPlane);
         sf::Vector2f pixel(pixelCoords);
-        lines[j].position = pixel;
-        lines[j].color = m_color2;
+        lines[i].position = pixel;
+        lines[i].color = m_color2;
     }
 
     target.draw(lines, states);
@@ -80,7 +84,7 @@ void Particle::update(float dt)
     scale(SCALE);
 
     float dx, dy;
-    dx = dt* m_vx;
+    dx = m_vx * dt;
     m_vy -= G * dt;
     dy = m_vy * dt;
     translate(dx, dy);

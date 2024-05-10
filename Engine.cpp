@@ -1,11 +1,15 @@
 #include "Engine.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <SFML/System/Time.hpp>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
 Engine::Engine()
 {
-    VideoMode customMode(1440, 1080);
-    m_Window.create(customMode, "Particle");
+    m_Window.create(VideoMode::getDesktopMode(), "Particles", Style::Default);
 }
 
 void Engine::run()
@@ -30,11 +34,13 @@ void Engine::input()
 
     while(m_Window.pollEvent(event))
     {
-        if(event.KeyPressed == Keyboard::Escape)
+        if(event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         {
             m_Window.close();
+
+            std::vector<Particle> newPart;
         }
-        else if (event.mouseButton.button ==  Mouse::Left)
+        if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button ==  Mouse::Left)
         {
             //Vector2f mouseClickPosition(event.mouseButton.x, event.mouseButton.y);
 
